@@ -1,0 +1,5 @@
+.env
+cache/
+site/
+__pycache__/
+data/stats.json
