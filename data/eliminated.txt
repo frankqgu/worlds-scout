@@ -1,0 +1,4 @@
+# Teams eliminated from Worlds 2026 (play-ins over); one short code per line, as in accounts.csv
+C9
+FUR
+MVK

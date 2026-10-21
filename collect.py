@@ -60,6 +60,15 @@ class Riot:
         return None
 
 
+def eliminated():
+    """Short codes of teams knocked out of Worlds, from data/eliminated.txt."""
+    try:
+        lines = open(os.path.join(ROOT, "data", "eliminated.txt"), encoding="utf-8").read().splitlines()
+    except FileNotFoundError:
+        return set()
+    return {l.strip().upper() for l in lines if l.strip() and not l.startswith("#")}
+
+
 def read_json(path, default):
     try:
         return json.load(open(path, encoding="utf-8"))
@@ -103,6 +112,8 @@ def main():
     rows = list(csv.DictReader(open(os.path.join(ROOT, "data", "accounts.csv"), encoding="utf-8"), delimiter="|"))
     if not args.all_platforms:
         rows = [r for r in rows if r["platform"] == "NA1"]
+    out_teams = eliminated()
+    rows = [r for r in rows if r["team"].upper() not in out_teams]
     if args.team:
         rows = [r for r in rows if r["team"].lower() == args.team.lower()]
 
