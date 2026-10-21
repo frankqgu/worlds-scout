@@ -4,167 +4,235 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Worlds Scout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0a0d17;--bg2:#10142409;--card:#121829;--card2:#182036;--line:#222b46;--text:#e6e9f7;--dim:#8a93b4;
-    --win:#3ddc97;--loss:#ff5d6c;--gold:#f0c35c;--accent:#7c8cff;--radius:14px
+    --bg:#0f1115;--panel:#161920;--panel2:#1c2029;--line:#262b36;--text:#e9ebf0;--dim:#8b92a1;
+    --win:#46c98b;--loss:#e5606b;--accent:#e8b44c;
+    --head:"Barlow Condensed","Arial Narrow",sans-serif;--body:Barlow,system-ui,Segoe UI,sans-serif
   }
   *{box-sizing:border-box}
-  body{margin:0;color:var(--text);font:14px/1.45 Inter,system-ui,Segoe UI,Roboto,sans-serif;
-    background:radial-gradient(1200px 500px at 10% -10%,#1b2450 0,transparent 60%),radial-gradient(900px 400px at 100% 0,#2a1b4a 0,transparent 55%),var(--bg);min-height:100vh}
-  header{padding:22px 28px 6px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-  h1{font-size:22px;margin:0;letter-spacing:.3px;background:linear-gradient(90deg,#fff,#aab4ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.4 var(--body);font-variant-numeric:tabular-nums}
+  header{padding:16px 20px 4px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  h1{font:700 26px/1 var(--head);text-transform:uppercase;letter-spacing:1px;margin:0}
+  h1 em{color:var(--accent);font-style:normal}
   .sub{color:var(--dim);font-size:12px}
-  .bar{padding:12px 28px 18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  .bar select,.bar input{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font:inherit;outline:none}
+  .bar{padding:10px 20px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .bar select,.bar input{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:4px;padding:6px 10px;font:inherit;outline:none}
   .bar select:focus,.bar input:focus{border-color:var(--accent)}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(460px,1fr));gap:18px;padding:0 28px 48px}
-  .team{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:0 10px 30px #0006}
-  .team h2{margin:0 0 6px;font-size:16px;display:flex;align-items:center;gap:10px}
-  .team h2 .tag{background:var(--accent);color:#0a0d17;font-weight:800;border-radius:8px;padding:2px 9px;font-size:13px}
-  .team h2 .tr{margin-left:auto;font-weight:500;font-size:12px;color:var(--dim)}
-  .wr{display:inline-block;height:5px;border-radius:3px;background:var(--loss);width:90px;vertical-align:middle;overflow:hidden;margin-left:8px}
-  .wr i{display:block;height:100%;background:var(--win)}
-  .player{padding:10px 0;border-top:1px solid var(--line)}
-  .phead{display:flex;gap:10px;align-items:center}
-  .ricon{width:22px;height:22px;flex:none;opacity:.9}
-  .pname{font-weight:700;font-size:15px}
-  .acct{color:var(--dim);font-size:11px}
-  .rec{margin-left:auto;text-align:right;font-size:12px;color:var(--dim)}
-  .rec b{color:var(--text);font-size:14px}
-  .champs{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
-  .ch{width:46px;position:relative;text-align:center;font-size:10px;cursor:default}
-  .ch img{width:46px;height:46px;border-radius:12px;display:block;border:2px solid var(--line);transition:transform .12s,border-color .12s;background:#000}
-  .ch:hover img{transform:translateY(-2px) scale(1.06)}
+  .bar .champ{border-color:#3a3320}
+  .bar button{background:none;border:0;color:var(--dim);cursor:pointer;font:inherit;padding:0 4px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:12px;padding:0 20px 40px}
+  .team{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+  .team h2{margin:0 0 4px;display:flex;align-items:baseline;gap:8px;font:700 20px/1 var(--head);text-transform:uppercase;letter-spacing:.6px}
+  .team h2 .tr{margin-left:auto;font:500 12px var(--body);color:var(--dim);text-transform:none;letter-spacing:0}
+  .player{padding:8px 0;border-top:1px solid var(--line)}
+  .phead{display:flex;gap:8px;align-items:baseline}
+  .pname{font:600 15px var(--body)}
+  .phead{align-items:center}
+  .ricon{width:22px;height:22px;flex:none;align-self:center}
+  .acct{color:var(--dim);font-size:11px;margin-left:2px}
+  .rec{margin-left:auto;font-size:12px;color:var(--dim)}
+  .rec b{color:var(--text);font-weight:600}
+  .champs{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+  .ch{width:42px;position:relative;text-align:center;font-size:10px;cursor:default}
+  .ch img{width:42px;height:42px;border-radius:4px;display:block;border:2px solid var(--line);background:#000}
   .ch.pos img{border-color:var(--win)} .ch.neg img{border-color:var(--loss)}
-  .ch .n{position:absolute;top:-5px;right:-5px;background:#0b0f1d;border:1px solid var(--line);border-radius:9px;min-width:18px;padding:0 4px;font-size:10px;font-weight:700}
-  .ch .wl{display:block;margin-top:2px;color:var(--dim);font-weight:600}
+  .ch .n{position:absolute;top:-4px;right:-4px;background:var(--bg);border:1px solid var(--line);border-radius:3px;min-width:16px;padding:0 3px;font-size:10px;font-weight:600}
+  .ch .wl{display:block;margin-top:1px;color:var(--dim)}
   .empty{color:var(--dim);font-size:12px;padding:6px 0}
+  /* champion search results */
+  .results{padding:0 20px 40px}
+  .rhead{display:flex;align-items:center;gap:10px;margin:4px 0 10px;font:700 22px var(--head);text-transform:uppercase;letter-spacing:.6px}
+  .rhead img{width:36px;height:36px;border-radius:4px}
+  .rhead span{font:400 13px var(--body);color:var(--dim);text-transform:none;letter-spacing:0}
+  table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+  th{font:600 11px var(--body);text-transform:uppercase;letter-spacing:.7px;color:var(--dim);text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  td{padding:7px 10px;border-top:1px solid var(--line);vertical-align:middle}
+  tr:first-child td{border-top:0}
+  td.num,th.num{text-align:right}
+  .who{display:flex;align-items:center;gap:8px}
+  .who img{width:30px;height:30px;border-radius:4px}
+  .who b{font-weight:600} .who small{display:block;color:var(--dim);font-size:11px}
+  .gi{display:flex;gap:3px;flex-wrap:wrap}
+  .gi img{width:22px;height:22px;border-radius:3px;border:2px solid var(--line);background:#000}
+  .gi img.w,.gicons img.w{border-color:var(--win)} .gi img.l,.gicons img.l{border-color:var(--loss)}
+  .runes img{width:22px;height:22px;margin-right:2px;vertical-align:middle}
   /* tooltip */
-  .tip{position:fixed;z-index:10;pointer-events:none;background:#0b0f1ef2;backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:14px;padding:14px 16px;width:300px;box-shadow:0 18px 50px #000b;display:none}
-  .th{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-  .th img{width:40px;height:40px;border-radius:10px}
-  .th b{font-size:16px} .th span{display:block;color:var(--dim);font-size:11px}
-  .row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #1a2240;font-size:13px}
-  .row:last-of-type{border-bottom:0}
+  .tip{position:fixed;z-index:10;pointer-events:none;background:#101319;border:1px solid #333a49;border-radius:6px;padding:12px 14px;width:290px;box-shadow:0 10px 30px #000a;display:none}
+  .th{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .th img{width:38px;height:38px;border-radius:4px}
+  .th b{font:700 18px var(--head);text-transform:uppercase;letter-spacing:.5px} .th span{display:block;color:var(--dim);font-size:11px}
+  .row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid var(--line);font-size:13px}
   .row .k{color:var(--dim)}
-  .good{color:var(--win);font-weight:700} .bad{color:var(--loss);font-weight:700}
-  .icons{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-  .icons img{width:24px;height:24px;border-radius:50%}
-  .sec{margin-top:10px;color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.6px}
-  .gicons{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
-  .gicons img{width:28px;height:28px;border-radius:8px;border:2px solid var(--line);background:#000}
-  .gicons img.w{border-color:var(--win)} .gicons img.l{border-color:var(--loss)}
-  .rune{background:#0007;border-radius:50%;padding:1px}
+  .good{color:var(--win);font-weight:600} .bad{color:var(--loss);font-weight:600}
+  .icons{display:flex;gap:4px;align-items:center}
+  .icons img{width:22px;height:22px}
+  .sec{margin-top:9px;color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.7px;font-weight:600}
+  .gicons{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+  .gicons img{width:26px;height:26px;border-radius:4px;border:2px solid var(--line);background:#000}
 </style>
 </head>
 <body>
 <header>
-  <h1>Worlds Scout</h1>
+  <h1>Worlds <em>Scout</em></h1>
   <span class="sub" id="meta"></span>
 </header>
 <div class="bar">
-  <input id="q" placeholder="Search player or team…" size="22">
+  <input id="champ" class="champ" list="champlist" placeholder="Search champion…" size="20" autocomplete="off">
+  <datalist id="champlist"></datalist>
+  <button id="clear" title="Clear champion search" hidden>✕</button>
+  <input id="q" placeholder="Player or team…" size="18">
   <select id="team"><option value="">All teams</option></select>
   <select id="role"><option value="">All roles</option><option>Top</option><option>Jungle</option><option>Mid</option><option>Bot</option><option>Support</option></select>
   <select id="sort"><option value="team">Sort: team</option><option value="games">Sort: games played</option></select>
 </div>
 <div class="grid" id="grid"></div>
+<div class="results" id="results" hidden></div>
 <div class="tip" id="tip"></div>
 <script>
 const DATA = /*__DATA__*/null;
 const VER = "16.20.1";
 const DD = `https://ddragon.leagueoflegends.com/cdn/${VER}/img/champion/`;
 const RUNE_CDN = "https://ddragon.leagueoflegends.com/cdn/img/";
-const grid = document.getElementById("grid"), tip = document.getElementById("tip");
+const grid = document.getElementById("grid"), results = document.getElementById("results"), tip = document.getElementById("tip");
 const pct = (w, g) => g ? Math.round(100 * w / g) : 0;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const wlClass = (w, g) => g >= 2 ? (w / g >= .6 ? "pos" : w / g <= .4 ? "neg" : "") : "";
-const champImg = (n, cls = "", title = "") => `<img class="${cls}" src="${DD}${encodeURIComponent(n)}.png" alt="${esc(n)}" title="${esc(title || n)}" loading="lazy">`;
+const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 
-// rune id -> icon url (keystones and trees), loaded once from Data Dragon
+// ddragon id -> display name (MonkeyKing -> Wukong); falls back to the id
+const champName = {};
+const nameOf = id => champName[id] || id;
+const champImg = (id, cls = "", title = "") => `<img class="${cls}" src="${DD}${encodeURIComponent(id)}.png" alt="${esc(nameOf(id))}" title="${esc(title || nameOf(id))}" loading="lazy">`;
 const runeIcon = {};
+
+// champions anyone played, for the search box
+const played = [...new Set(DATA.players.flatMap(p => p.champions.map(c => c.champion)))];
+function fillDatalist() {
+  document.getElementById("champlist").innerHTML = played.map(id => nameOf(id)).sort().map(n => `<option value="${esc(n)}">`).join("");
+}
+fillDatalist();
+fetch(`https://ddragon.leagueoflegends.com/cdn/${VER}/data/en_US/champion.json`).then(r => r.json()).then(j => {
+  for (const c of Object.values(j.data)) champName[c.id] = c.name;
+  fillDatalist(); render();
+}).catch(() => {});
 fetch(`https://ddragon.leagueoflegends.com/cdn/${VER}/data/en_US/runesReforged.json`).then(r => r.json()).then(trees => {
   for (const t of trees) {
     runeIcon[t.id] = RUNE_CDN + t.icon;
     for (const s of t.slots) for (const r of s.runes) runeIcon[r.id] = RUNE_CDN + r.icon;
   }
+  render();
 }).catch(() => {});
 
-const ROLE_SVG = {
-  Top: '<path d="M4 4h10v2H6v8H4zM8 8h8v8H8z" fill="currentColor"/>',
-  Jungle: '<path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-5 4-6 5-10zM11 14h2v7h-2z" fill="currentColor"/>',
-  Mid: '<path d="M4 18 18 4h2v2L6 20H4zM14 18h6v2h-8zM4 4h8v2H6v6H4z" fill="currentColor"/>',
-  Bot: '<path d="M20 20H10v-2h8v-8h2zM4 4l10 0v2H6v8H4zM8 8h8v8H8z" fill="currentColor" opacity=".9"/>',
-  Support: '<path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8z" fill="currentColor"/>'
-};
-const roleIcon = r => `<svg class="ricon" viewBox="0 0 24 24" style="color:var(--accent)">${ROLE_SVG[r] || ""}</svg>`;
-const PARTNER_LABEL = {Jungle: "Mid partner", Mid: "Jungle partner", Bot: "Support partner", Support: "ADC partner"};
+// official client role icons from Community Dragon
+const ROLE_IMG = {Top: "top", Jungle: "jungle", Mid: "middle", Bot: "bottom", Support: "utility"};
+const roleIcon = (role, cls = "ricon") => ROLE_IMG[role]
+  ? `<img class="${cls}" src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champ-select/global/default/svg/position-${ROLE_IMG[role]}.svg" alt="${esc(role)}" title="${esc(role)}">` : "";
+const PARTNER_LABEL ={Jungle: "Mid partner", Mid: "Jungle partner", Bot: "Support partner", Support: "ADC partner"};
 
-// team picker
 const teamSel = document.getElementById("team");
 [...new Set(DATA.players.map(p => p.team))].sort().forEach(t => teamSel.insertAdjacentHTML("beforeend", `<option>${esc(t)}</option>`));
 
+const filters = () => ({
+  role: document.getElementById("role").value, team: teamSel.value,
+  q: document.getElementById("q").value.trim().toLowerCase(), sort: document.getElementById("sort").value,
+  champ: norm(document.getElementById("champ").value)
+});
+const playerOk = (p, f) => !(f.role && p.role !== f.role) && !(f.team && p.team !== f.team) &&
+  !(f.q && !(p.handle.toLowerCase().includes(f.q) || p.team.toLowerCase().includes(f.q)));
+
 function render() {
-  const role = document.getElementById("role").value, sort = document.getElementById("sort").value,
-        team = teamSel.value, q = document.getElementById("q").value.trim().toLowerCase();
-  const teams = {};
-  for (const p of DATA.players) {
-    if (role && p.role !== role) continue;
-    if (team && p.team !== team) continue;
-    if (q && !(p.handle.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))) continue;
-    (teams[p.team] ||= []).push(p);
-  }
-  const names = Object.keys(teams), total = t => teams[t].reduce((s, p) => s + p.games, 0);
-  if (sort === "games") names.sort((a, b) => total(b) - total(a));
-  grid.innerHTML = names.map(t => {
-    const ps = teams[t], g = total(t), w = ps.reduce((s, p) => s + p.wins, 0);
-    return `<section class="team"><h2><span class="tag">${esc(t)}</span><span class="tr">${w}-${g - w}<span class="wr"><i style="width:${pct(w, g)}%"></i></span> ${pct(w, g)}%</span></h2>${ps.map(playerHtml).join("")}</section>`;
-  }).join("") || '<div class="empty">No matching players.</div>';
+  const f = filters();
+  document.getElementById("clear").hidden = !f.champ;
   document.getElementById("meta").textContent =
     `NA solo queue · last ${DATA.days} days · updated ${new Date(DATA.generatedAt).toLocaleString()}`;
+  if (f.champ) { grid.hidden = true; results.hidden = false; renderChamp(f); return; }
+  results.hidden = true; grid.hidden = false;
+  const teams = {};
+  for (const p of DATA.players) if (playerOk(p, f)) (teams[p.team] ||= []).push(p);
+  const names = Object.keys(teams), total = t => teams[t].reduce((s, p) => s + p.games, 0);
+  if (f.sort === "games") names.sort((a, b) => total(b) - total(a));
+  grid.innerHTML = names.map(t => {
+    const ps = teams[t], g = total(t), w = ps.reduce((s, p) => s + p.wins, 0);
+    return `<section class="team"><h2>${esc(t)}<span class="tr">${w}-${g - w} · ${pct(w, g)}%</span></h2>${ps.map(playerHtml).join("")}</section>`;
+  }).join("") || '<div class="empty">No matching players.</div>';
 }
 
 function playerHtml(p) {
   const idx = DATA.players.indexOf(p);
   const chips = p.champions.map((c, i) =>
     `<div class="ch ${wlClass(c.wins, c.games)}" data-p="${idx}" data-c="${i}">${champImg(c.champion)}<span class="n">${c.games}</span><span class="wl">${c.wins}-${c.games - c.wins}</span></div>`).join("");
-  return `<div class="player"><div class="phead">${roleIcon(p.role)}<div><div class="pname">${esc(p.handle)}</div><div class="acct">${esc(p.riotId)}${p.found ? "" : " · account not found"}</div></div>
-    <div class="rec">${p.games ? `<b>${pct(p.wins, p.games)}%</b><br>${p.wins}-${p.games - p.wins}` : ""}</div></div>
+  return `<div class="player"><div class="phead">${roleIcon(p.role)}<span class="pname">${esc(p.handle)}</span><span class="acct">${esc(p.riotId)}${p.found ? "" : " · not found"}</span>
+    <span class="rec">${p.games ? `<b>${pct(p.wins, p.games)}%</b> ${p.wins}-${p.games - p.wins}` : ""}</span></div>
     ${chips ? `<div class="champs">${chips}</div>` : '<div class="empty">No ranked games in window</div>'}</div>`;
+}
+
+// champion search: every pro who played a matching champion, most games first
+function renderChamp(f) {
+  const hits = [];
+  for (const p of DATA.players) {
+    if (!playerOk(p, f)) continue;
+    for (const c of p.champions) if (norm(nameOf(c.champion)).includes(f.champ) || norm(c.champion).includes(f.champ)) hits.push({p, c});
+  }
+  hits.sort((a, b) => b.c.games - a.c.games || b.c.wins - a.c.wins);
+  if (!hits.length) { results.innerHTML = '<div class="empty">No pro has played that champion in this window.</div>'; return; }
+  const ids = [...new Set(hits.map(h => h.c.champion))];
+  let head = "";
+  if (ids.length === 1) {
+    const g = hits.reduce((s, h) => s + h.c.games, 0), w = hits.reduce((s, h) => s + h.c.wins, 0);
+    head = `<div class="rhead">${champImg(ids[0])}${esc(nameOf(ids[0]))}<span>${g} games · ${w}-${g - w} (${pct(w, g)}%) · ${hits.length} pro${hits.length > 1 ? "s" : ""}</span></div>`;
+  } else {
+    head = `<div class="rhead">${ids.length} champions<span>${hits.length} player entries</span></div>`;
+  }
+  const icons = (list, key) => list.filter(g => g[key]).map(g => champImg(g[key], g.win ? "w" : "l", `${nameOf(g[key])} — ${g.win ? "win" : "loss"}`)).join("");
+  const rows = hits.map(({p, c}) => {
+    const gd = c.gd15 == null ? "–" : `<span class="${c.gd15 >= 0 ? "good" : "bad"}">${c.gd15 >= 0 ? "+" : ""}${c.gd15}</span>`;
+    const wcls = wlClass(c.wins, c.games), wc = wcls === "pos" ? "good" : wcls === "neg" ? "bad" : "";
+    const runes = [...c.keystones.map(k => k.id), ...c.trees.map(t => t.id)].filter(id => runeIcon[id]).map(id => `<img src="${runeIcon[id]}" alt="">`).join("");
+    const log = c.log.slice(0, 10);
+    return `<tr><td><div class="who">${ids.length > 1 ? champImg(c.champion) : ""}${roleIcon(p.role, "ricon")}<div><b>${esc(p.handle)}</b><small>${esc(p.team)}</small></div></div></td>
+      <td class="num">${c.games}</td><td class="num ${wc}">${c.wins}-${c.games - c.wins} (${pct(c.wins, c.games)}%)</td>
+      <td class="num">${c.kills}/${c.deaths}/${c.assists}</td><td class="num">${gd}</td>
+      <td class="runes">${runes}</td><td><div class="gi">${icons(log, "enemy")}</div></td>
+      <td><div class="gi">${PARTNER_LABEL[p.role] ? icons(log, "partner") : ""}</div></td></tr>`;
+  }).join("");
+  results.innerHTML = head + `<table><thead><tr><th>Player</th><th class="num">Games</th><th class="num">W-L</th><th class="num">K/D/A</th><th class="num">GD@15</th><th>Runes</th><th>Vs (each game)</th><th>Partner (each game)</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function tipHtml(p, c) {
   const wc = wlClass(c.wins, c.games), wcl = wc === "pos" ? "good" : wc === "neg" ? "bad" : "";
   const gd = c.gd15 == null ? "–" : `<span class="${c.gd15 >= 0 ? "good" : "bad"}">${c.gd15 >= 0 ? "+" : ""}${c.gd15}</span>`;
   const runes = [...c.keystones.map(k => k.id), ...c.trees.map(t => t.id)].filter(id => runeIcon[id])
-    .map(id => `<img class="rune" src="${runeIcon[id]}" alt="">`).join("") || "–";
+    .map(id => `<img src="${runeIcon[id]}" alt="">`).join("") || "–";
   const games = c.log.slice(0, 14);
-  const enemyRow = games.filter(g => g.enemy).map(g => champImg(g.enemy, g.win ? "w" : "l", `vs ${g.enemy} — ${g.win ? "win" : "loss"}`)).join("");
-  const partnerLabel = PARTNER_LABEL[p.role];
-  const partnerRow = partnerLabel ? games.filter(g => g.partner).map(g => champImg(g.partner, g.win ? "w" : "l", `${g.partner} — ${g.win ? "win" : "loss"}`)).join("") : "";
-  return `<div class="th">${champImg(c.champion)}<div><b>${esc(c.champion)}</b><span>${esc(p.handle)} · ${esc(p.team)}</span></div></div>
+  const pick = key => games.filter(g => g[key]).map(g => champImg(g[key], g.win ? "w" : "l", `${nameOf(g[key])} — ${g.win ? "win" : "loss"}`)).join("");
+  const enemyRow = pick("enemy"), partnerLabel = PARTNER_LABEL[p.role], partnerRow = partnerLabel ? pick("partner") : "";
+  return `<div class="th">${champImg(c.champion)}<div><b>${esc(nameOf(c.champion))}</b><span>${esc(p.handle)} · ${esc(p.team)}</span></div></div>
     <div class="row"><span class="k">Games</span><span>${c.games}</span></div>
     <div class="row"><span class="k">Win / Loss</span><span class="${wcl}">${c.wins}-${c.games - c.wins} (${pct(c.wins, c.games)}%)</span></div>
     <div class="row"><span class="k">KDA</span><span>${c.kills} / ${c.deaths} / ${c.assists} <span class="sub">(${c.kda})</span></span></div>
     <div class="row"><span class="k">Avg gold diff @15</span><span>${gd}</span></div>
     <div class="row"><span class="k">CS / min</span><span>${c.csPerMin}</span></div>
     <div class="row"><span class="k">Runes</span><span class="icons">${runes}</span></div>
-    ${enemyRow ? `<div class="sec">Matchups (each game)</div><div class="gicons">${enemyRow}</div>` : ""}
-    ${partnerRow ? `<div class="sec">${partnerLabel} (each game)</div><div class="gicons">${partnerRow}</div>` : ""}`;
+    ${enemyRow ? `<div class="sec">Matchups</div><div class="gicons">${enemyRow}</div>` : ""}
+    ${partnerRow ? `<div class="sec">${partnerLabel}</div><div class="gicons">${partnerRow}</div>` : ""}`;
 }
 
 grid.addEventListener("mousemove", e => {
   const el = e.target.closest(".ch");
   if (!el) { tip.style.display = "none"; return; }
-  const p = DATA.players[+el.dataset.p], c = p.champions[+el.dataset.c];
-  tip.innerHTML = tipHtml(p, c);
+  tip.innerHTML = tipHtml(DATA.players[+el.dataset.p], DATA.players[+el.dataset.p].champions[+el.dataset.c]);
   tip.style.display = "block";
   tip.style.left = Math.min(e.clientX + 16, innerWidth - tip.offsetWidth - 10) + "px";
   tip.style.top = Math.min(e.clientY + 16, innerHeight - tip.offsetHeight - 10) + "px";
 });
 grid.addEventListener("mouseleave", () => tip.style.display = "none");
-["role", "sort", "team", "q"].forEach(id => document.getElementById(id).addEventListener(id === "q" ? "input" : "change", render));
+["role", "sort", "team"].forEach(id => document.getElementById(id).addEventListener("change", render));
+["q", "champ"].forEach(id => document.getElementById(id).addEventListener("input", render));
+document.getElementById("clear").onclick = () => { document.getElementById("champ").value = ""; render(); };
 render();
 </script>
 </body>
