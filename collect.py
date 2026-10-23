@@ -1,9 +1,9 @@
 """Collect Worlds pros' NA solo queue games from the Riot API and compute champion/matchup stats.
 
-Usage: python collect.py [--team TL] [--days 4] [--all-platforms]
+Usage: python collect.py [--team TL] [--since 2026-10-15] [--all-platforms]
 Incremental: resolved PUUIDs and match details are cached under cache/, so re-runs only fetch new games.
 """
-import argparse, csv, json, os, sys, time, urllib.parse, urllib.request, urllib.error
+import argparse, csv, datetime, json, os, sys, time, urllib.parse, urllib.request, urllib.error
 from collections import defaultdict, deque
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -102,7 +102,7 @@ def save(players, days):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--team")
-    ap.add_argument("--days", type=float, default=4)
+    ap.add_argument("--since", default="2026-10-15", help="fixed window start (UTC date); window grows with each refresh")
     ap.add_argument("--all-platforms", action="store_true")
     args = ap.parse_args()
 
@@ -118,7 +118,8 @@ def main():
         rows = [r for r in rows if r["team"].lower() == args.team.lower()]
 
     puuids = read_json(os.path.join(CACHE, "puuids.json"), {})
-    since = int(time.time() - args.days * 86400)
+    since = int(datetime.datetime.strptime(args.since, "%Y-%m-%d").replace(tzinfo=datetime.timezone.utc).timestamp())
+    days = (time.time() - since) / 86400
 
     players = []
     for i, row in enumerate(rows, 1):
@@ -147,9 +148,9 @@ def main():
         print(f"[{i}/{len(rows)}] {row['team']} {row['handle']}: {len(ids)} games", flush=True)
         players.append({**row, "puuid": puuid, "match_ids": ids})
         if i % 10 == 0:
-            save(players, args.days)
+            save(players, days)
 
-    save(players, args.days)
+    save(players, days)
     print("wrote data/stats.json")
 
 

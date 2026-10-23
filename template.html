@@ -149,7 +149,7 @@ function render() {
   const f = filters();
   document.getElementById("clear").hidden = !f.champ;
   document.getElementById("meta").textContent =
-    `NA solo queue · last ${DATA.days} days · updated ${new Date(DATA.generatedAt).toLocaleString()}`;
+    `NA solo queue · since Oct 15 · updated ${new Date(DATA.generatedAt).toLocaleString()}`;
   if (f.champ) { grid.hidden = true; results.hidden = false; renderChamp(f); return; }
   results.hidden = true; grid.hidden = false;
   const teams = {};
