@@ -175,7 +175,11 @@ def compute(players):
                 continue
             info = m["info"]
             parts = info["participants"]
-            me = next((x for x in parts if x["puuid"] == p["puuid"]), None)
+            # PUUIDs are encrypted per API key, so games cached under an older key match on Riot ID instead
+            gname, _, gtag = p["riotId"].rpartition("#")
+            me = next((x for x in parts if x["puuid"] == p["puuid"]
+                       or (x.get("riotIdGameName", "").lower() == gname.lower()
+                           and x.get("riotIdTagline", "").lower() == gtag.lower())), None)
             if not me:
                 continue
             gold = read_json(os.path.join(TL_DIR, f"{mid}.json"), {})
