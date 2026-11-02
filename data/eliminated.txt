@@ -1,4 +1,13 @@
-# Teams eliminated from Worlds 2026 (play-ins over); one short code per line, as in accounts.csv
+# Teams eliminated from Worlds 2026; one short code per line, as in accounts.csv
+# Remaining (quarterfinals): GEN DK T1 iG TES BLG KC LYON
 C9
 FUR
 MVK
+TL
+G2
+HLE
+LOS
+MKOI
+CFO
+AL
+TSW
